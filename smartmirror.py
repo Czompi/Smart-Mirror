@@ -1,6 +1,14 @@
+#!/usr/local/bin/python
+# coding=utf-8
+
+# Some minor code fixup and Hungarian translation by Czompi.
+
 # smartmirror.py
 # requirements
 # requests, feedparser, traceback, Pillow
+
+import os, sys
+
 
 from Tkinter import *
 import locale
@@ -19,12 +27,12 @@ LOCALE_LOCK = threading.Lock()
 ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
 time_format = 12 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
-news_country_code = 'us'
+news_country_code = 'hu'
 weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
-weather_lang = 'en' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
-weather_unit = 'us' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
-latitude = None # Set this if IP location lookup does not work for you (must be a string)
-longitude = None # Set this if IP location lookup does not work for you (must be a string)
+weather_lang = 'hu' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
+weather_unit = 'si' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
+latitude = 46.366531 # Set this if IP location lookup does not work for you (must be a string)
+longitude = 17.782480 # Set this if IP location lookup does not work for you (must be a string)
 xlarge_text_size = 94
 large_text_size = 48
 medium_text_size = 28
@@ -130,7 +138,7 @@ class Weather(Frame):
             return ip_json['ip']
         except Exception as e:
             traceback.print_exc()
-            return "Error: %s. Cannot get ip." % e
+            return "Error: %s. Sikertelen az IP cím lekérdezése." % e
 
     def get_weather(self):
         try:
@@ -192,14 +200,14 @@ class Weather(Frame):
                 self.temperatureLbl.config(text=temperature2)
             if self.location != location2:
                 if location2 == ", ":
-                    self.location = "Cannot Pinpoint Location"
-                    self.locationLbl.config(text="Cannot Pinpoint Location")
+                    self.location = "Nem behatárolható pozíció"
+                    self.locationLbl.config(text="Nem behatárolható pozíció")
                 else:
                     self.location = location2
                     self.locationLbl.config(text=location2)
         except Exception as e:
             traceback.print_exc()
-            print "Error: %s. Cannot get weather." % e
+            print "Hiba: %s. Az időjárás lekérdezése sikertelen." % e
 
         self.after(600000, self.get_weather)
 
@@ -212,7 +220,7 @@ class News(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='black')
-        self.title = 'News' # 'News' is more internationally generic
+        self.title = 'Hírek' # 'News' is more internationally generic
         self.newsLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.newsLbl.pack(side=TOP, anchor=W)
         self.headlinesContainer = Frame(self, bg="black")
@@ -227,7 +235,7 @@ class News(Frame):
             if news_country_code == None:
                 headlines_url = "https://news.google.com/news?ned=us&output=rss"
             else:
-                headlines_url = "https://news.google.com/news?ned=%s&output=rss" % news_country_code
+                headlines_url = "https://news.google.com/rss?hl=hu&gl=hu&ceid=HU:hu"
 
             feed = feedparser.parse(headlines_url)
 
@@ -236,7 +244,7 @@ class News(Frame):
                 headline.pack(side=TOP, anchor=W)
         except Exception as e:
             traceback.print_exc()
-            print "Error: %s. Cannot get news." % e
+            print "Hiba: %s. A hírek lekérdezése sikertelen." % e
 
         self.after(600000, self.get_headlines)
 
@@ -262,7 +270,7 @@ class NewsHeadline(Frame):
 class Calendar(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, bg='black')
-        self.title = 'Calendar Events'
+        self.title = 'Naptári események'
         self.calendarLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.calendarLbl.pack(side=TOP, anchor=E)
         self.calendarEventContainer = Frame(self, bg='black')
