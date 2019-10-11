@@ -25,8 +25,8 @@ from contextlib import contextmanager
 LOCALE_LOCK = threading.Lock()
 
 ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
-time_format = 12 # 12 or 24
-date_format = "%b %d, %Y" # check python doc for strftime() for options
+time_format = 24 # 12 or 24
+date_format = "%Y. %b. %d." # check python doc for strftime() for options
 news_country_code = 'hu'
 weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
 weather_lang = 'hu' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
@@ -246,7 +246,7 @@ class News(Frame):
             traceback.print_exc()
             print "Hiba: %s. A hírek lekérdezése sikertelen." % e
 
-        self.after(600000, self.get_headlines)
+        self.after(200, self.get_headlines)
 
 
 class NewsHeadline(Frame):
