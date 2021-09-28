@@ -132,7 +132,7 @@ class Weather(Frame):
 
     def get_ip(self):
         try:
-            ip_url = "http://jsonip.com/"
+            ip_url = "https://api.ipify.org/?format=json"
             req = requests.get(ip_url)
             ip_json = json.loads(req.text)
             return ip_json['ip']
