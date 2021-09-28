@@ -30,7 +30,7 @@ date_format = "%b %d, %Y" # check python doc for strftime() for options
 news_country_code = 'hu'
 weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
 weather_lang = 'hu' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
-weather_unit = 'si' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
+weather_unit = 'metric' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
 latitude = 46.366531 # Kaposvar, Hungary | Set this if IP location lookup does not work for you (must be a string)
 longitude = 17.782480 # Kaposvar, Hungary | Set this if IP location lookup does not work for you (must be a string)
 xlarge_text_size = 94
@@ -145,7 +145,7 @@ class Weather(Frame):
 
             if latitude is None and longitude is None:
                 # get location
-                location_req_url = "http://freegeoip.net/json/%s" % self.get_ip()
+                location_req_url = "https://freegeoip.app/json/%s" % self.get_ip()
                 r = requests.get(location_req_url)
                 location_obj = json.loads(r.text)
 
@@ -155,11 +155,11 @@ class Weather(Frame):
                 location2 = "%s, %s" % (location_obj['city'], location_obj['region_code'])
 
                 # get weather
-                weather_req_url = "https://api.darksky.net/forecast/%s/%s,%s?lang=%s&units=%s" % (weather_api_token, lat,lon,weather_lang,weather_unit)
+                weather_req_url = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (lat, lon, weather_api_token, weather_lang, weather_unit)
             else:
                 location2 = ""
                 # get weather
-                weather_req_url = "https://api.darksky.net/forecast/%s/%s,%s?lang=%s&units=%s" % (weather_api_token, latitude, longitude, weather_lang, weather_unit)
+                weather_req_url = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (weather_api_token, latitude, longitude, weather_lang, weather_unit)
 
             r = requests.get(weather_req_url)
             weather_obj = json.loads(r.text)

@@ -23,10 +23,10 @@ for line in open('requirements.txt', 'r'):
 # Run setuptools for pip
 setup(
     name='smartmirror',
-    version='1.0.0',
+    version='1.5.0',
     description='Raspberry powered mirror which can display news, weather, calendar events',
     author='HackerHouse',
-    url='https://github.com/HackerHouseYT/Smart-Mirror',
+    url='https://github.com/Czompi/Smart-Mirror',
     install_requires=packages,
     packages=find_packages(),
 )
