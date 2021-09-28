@@ -165,11 +165,11 @@ class Weather(Frame):
             weather_obj = json.loads(r.text)
 
             degree_sign= u'\N{DEGREE SIGN}'
-            temperature2 = "%s%s" % (str(int(weather_obj['currently']['temperature'])), degree_sign)
-            currently2 = weather_obj['currently']['summary']
-            forecast2 = weather_obj["hourly"]["summary"]
+            temperature2 = "%s%s" % (str(int(weather_obj['main']['temp'])), degree_sign)
+            currently2 = weather_obj['weather'][0]['main']
+            forecast2 = weather_obj['weather'][1]['main']
 
-            icon_id = weather_obj['currently']['icon']
+            icon_id = weather_obj['weather'][0]['icon']
             icon2 = None
 
             if icon_id in icon_lookup:
