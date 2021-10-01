@@ -1,8 +1,14 @@
 # Smart-Mirror
 Raspberry powered mirror which can display the news, weather, and time.
 
-## Installation and Updating
-### Code
+
+```bash
+cd Smart-Mirror
+```
+
+## Automated install
+
+### Get the repository
 If you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed, clone the repository.
 
 ```bash
@@ -13,9 +19,35 @@ git clone git@github.com:Czompi/Smart-Mirror.git
 
 Navigate to the folder for the repository
 
-```bash
-cd Smart-Mirror
+### Setup project
+```shell
+chmod -x ./setup.sh
+./setup.sh
 ```
+
+### Start
+#### Linux/macOS
+```shell
+chmod -x ./run.sh
+./run.sh
+```
+#### Windows
+```batch
+run.bat
+```
+
+## Manual install
+
+### Get the repository
+If you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed, clone the repository.
+
+```bash
+git clone git@github.com:Czompi/Smart-Mirror.git
+```
+
+**Alternatively, you can download a zip file containing the project (green button on the repository page)**
+
+Navigate to the folder for the repository
 
 ### Install your dependencies 
 make sure you have [pip](https://pip.pypa.io/en/stable/installing/) installed before doing this
