@@ -68,7 +68,7 @@ Use `vim` to edit you file
 vim smartmirror.py
 ```
 
-replace `weather_api_token` with the token you got from forecast.io
+replace `weather_api_token` with the token you got from openweathermap.org
 
 ## Running
 To run the application run the following command in this folder
