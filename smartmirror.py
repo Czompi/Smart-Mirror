@@ -8,7 +8,7 @@
 # requests, feedparser, traceback, Pillow
 
 import os, sys
-
+import config
 
 from Tkinter import *
 import locale
@@ -23,20 +23,6 @@ from PIL import Image, ImageTk
 from contextlib import contextmanager
 
 LOCALE_LOCK = threading.Lock()
-
-ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
-time_format = 12 # 12 or 24
-date_format = "%b %d, %Y" # check python doc for strftime() for options
-news_country_code = 'hu'
-weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
-weather_lang = 'hu' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
-weather_unit = 'metric' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
-latitude = 46.366531 # Kaposvar, Hungary | Set this if IP location lookup does not work for you (must be a string)
-longitude = 17.782480 # Kaposvar, Hungary | Set this if IP location lookup does not work for you (must be a string)
-xlarge_text_size = 94
-large_text_size = 48
-medium_text_size = 28
-small_text_size = 18
 
 @contextmanager
 def setlocale(name): #thread proof function to work with locale
@@ -92,14 +78,14 @@ class Clock(Frame):
         self.tick()
 
     def tick(self):
-        with setlocale(ui_locale):
-            if time_format == 12:
+        with setlocale(config.ui_locale):
+            if config.time_format == 12:
                 time2 = time.strftime('%I:%M %p') #hour in 12h format
             else:
                 time2 = time.strftime('%H:%M') #hour in 24h format
 
             day_of_week2 = time.strftime('%A')
-            date2 = time.strftime(date_format)
+            date2 = time.strftime(config.date_format)
             # if time string has changed, update it
             if time2 != self.time1:
                 self.time1 = time2
@@ -126,15 +112,15 @@ class Weather(Frame):
         self.icon = ''
         self.degreeFrm = Frame(self, bg="black")
         self.degreeFrm.pack(side=TOP, anchor=W)
-        self.temperatureLbl = Label(self.degreeFrm, font=('Helvetica', xlarge_text_size), fg="white", bg="black")
+        self.temperatureLbl = Label(self.degreeFrm, font=('Helvetica', config.xlarge_text_size), fg="white", bg="black")
         self.temperatureLbl.pack(side=LEFT, anchor=N)
         self.iconLbl = Label(self.degreeFrm, bg="black")
         self.iconLbl.pack(side=LEFT, anchor=N, padx=20)
-        self.currentlyLbl = Label(self, font=('Helvetica', medium_text_size), fg="white", bg="black")
+        self.currentlyLbl = Label(self, font=('Helvetica', config.medium_text_size), fg="white", bg="black")
         self.currentlyLbl.pack(side=TOP, anchor=W)
-        self.forecastLbl = Label(self, font=('Helvetica', small_text_size), fg="white", bg="black")
+        self.forecastLbl = Label(self, font=('Helvetica', config.small_text_size), fg="white", bg="black")
         self.forecastLbl.pack(side=TOP, anchor=W)
-        self.locationLbl = Label(self, font=('Helvetica', small_text_size), fg="white", bg="black")
+        self.locationLbl = Label(self, font=('Helvetica', config.small_text_size), fg="white", bg="black")
         self.locationLbl.pack(side=TOP, anchor=W)
         self.get_weather()
 
@@ -151,7 +137,7 @@ class Weather(Frame):
     def get_weather(self):
         try:
 
-            if latitude is None and longitude is None:
+            if config.latitude is None and config.longitude is None:
                 # get location
                 location_req_url = "https://freegeoip.app/json/%s" % self.get_ip()
                 r = requests.get(location_req_url)
@@ -163,11 +149,11 @@ class Weather(Frame):
                 location2 = "%s, %s" % (location_obj['city'], location_obj['region_code'])
 
                 # get weather
-                weather_req_url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (lat, lon, weather_api_token, weather_lang, weather_unit)
+                weather_req_url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (lat, lon, config.weather_api_token, config.weather_lang, config.weather_unit)
             else:
                 location2 = ""
                 # get weather
-                weather_req_url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (weather_api_token, latitude, longitude, weather_lang, weather_unit)
+                weather_req_url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (config.weather_api_token, config.latitude, config.longitude, config.weather_lang, config.weather_unit)
 
             r = requests.get(weather_req_url)
             weather_obj = json.loads(r.text)
@@ -215,7 +201,7 @@ class Weather(Frame):
                     self.locationLbl.config(text=location2)
         except Exception as e:
             traceback.print_exc()
-            print "Hiba: %s. Az időjárás lekérdezése sikertelen." % e
+            print("Hiba: %s. Az időjárás lekérdezése sikertelen." % e)
 
         self.after(600000, self.get_weather)
 
@@ -229,7 +215,7 @@ class News(Frame):
         Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='black')
         self.title = 'Hírek' # 'News' is more internationally generic
-        self.newsLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
+        self.newsLbl = Label(self, text=self.title, font=('Helvetica', config.medium_text_size), fg="white", bg="black")
         self.newsLbl.pack(side=TOP, anchor=W)
         self.headlinesContainer = Frame(self, bg="black")
         self.headlinesContainer.pack(side=TOP)
@@ -240,7 +226,7 @@ class News(Frame):
             # remove all children
             for widget in self.headlinesContainer.winfo_children():
                 widget.destroy()
-            if news_country_code == None:
+            if config.news_country_code == None:
                 headlines_url = "https://news.google.com/news?ned=us&output=rss"
             else:
                 headlines_url = "https://news.google.com/rss?hl=hu&gl=hu&ceid=HU:hu"
@@ -252,7 +238,7 @@ class News(Frame):
                 headline.pack(side=TOP, anchor=W)
         except Exception as e:
             traceback.print_exc()
-            print "Hiba: %s. A hírek lekérdezése sikertelen." % e
+            print("Hiba: %s. A hírek lekérdezése sikertelen." % e)
 
         self.after(600000, self.get_headlines)
 
@@ -271,7 +257,7 @@ class NewsHeadline(Frame):
         self.iconLbl.pack(side=LEFT, anchor=N)
 
         self.eventName = event_name
-        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', small_text_size), fg="white", bg="black")
+        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', config.small_text_size), fg="white", bg="black")
         self.eventNameLbl.pack(side=LEFT, anchor=N)
 
 
@@ -279,7 +265,7 @@ class Calendar(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, bg='black')
         self.title = 'Naptári események'
-        self.calendarLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
+        self.calendarLbl = Label(self, text=self.title, font=('Helvetica', config.medium_text_size), fg="white", bg="black")
         self.calendarLbl.pack(side=TOP, anchor=E)
         self.calendarEventContainer = Frame(self, bg='black')
         self.calendarEventContainer.pack(side=TOP, anchor=E)
@@ -302,7 +288,7 @@ class CalendarEvent(Frame):
     def __init__(self, parent, event_name="Event 1"):
         Frame.__init__(self, parent, bg='black')
         self.eventName = event_name
-        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', small_text_size), fg="white", bg="black")
+        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', config.small_text_size), fg="white", bg="black")
         self.eventNameLbl.pack(side=TOP, anchor=E)
 
 
