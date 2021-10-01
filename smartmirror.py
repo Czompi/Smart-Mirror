@@ -173,7 +173,7 @@ class Weather(Frame):
             weather_obj = json.loads(r.text)
 
             degree_sign= u'\N{DEGREE SIGN}'
-            temperature2 = "%s%s" % (str(int(weather_obj['main']['temp'])), degree_sign)
+            temperature2 = "%s%s" % (str(int(weather_obj['current']['temp'])), degree_sign)
             currently2 = weather_obj['current']['weather'][0]['description']
             forecast2 = weather_obj['daily']['weather'][0]['main']
 
