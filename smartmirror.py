@@ -10,7 +10,7 @@
 import os, sys
 import config
 
-from Tkinter import *
+from tkinter import *
 import locale
 import threading
 import time
