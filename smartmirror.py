@@ -50,19 +50,27 @@ def setlocale(name): #thread proof function to work with locale
 # maps open weather icons to
 # icon reading is not impacted by the 'lang' parameter
 icon_lookup = {
-    'clear-day': "assets/Sun.png",  # clear sky day
-    'wind': "assets/Wind.png",   #wind
-    'cloudy': "assets/Cloud.png",  # cloudy day
-    'partly-cloudy-day': "assets/PartlySunny.png",  # partly cloudy day
-    'rain': "assets/Rain.png",  # rain day
-    'snow': "assets/Snow.png",  # snow day
-    'snow-thin': "assets/Snow.png",  # sleet day
-    'fog': "assets/Haze.png",  # fog day
-    'clear-night': "assets/Moon.png",  # clear sky night
-    'partly-cloudy-night': "assets/PartlyMoon.png",  # scattered clouds night
-    'thunderstorm': "assets/Storm.png",  # thunderstorm
-    'tornado': "assests/Tornado.png",    # tornado
-    'hail': "assests/Hail.png"  # hail
+    '01d': "assets/Sun.png",  # clear sky day
+    '01n': "assets/Moon.png",  # clear sky night
+    # 'wind': "assets/Wind.png",   #wind
+    '02d': "assets/PartlySunny.png",  # partly cloudy day
+    '02n': "assets/PartlyMoon.png",  # scattered clouds night
+    '03d': "assets/Cloud.png",  # cloudy day
+    '03n': "assets/Cloud.png",  # cloudy day
+    '04d': "assets/Cloud.png",  # cloudy day
+    '04n': "assets/Cloud.png",  # cloudy day
+    '09d': "assets/Rain.png",  # rain day
+    '09n': "assets/Rain.png",  # rain day
+    '10d': "assets/Rain.png",  # rain day
+    '10n': "assets/Rain.png",  # rain day
+    '11d': "assets/Storm.png",  # thunderstorm
+    '11n': "assets/Storm.png",  # thunderstorm
+    '13d': "assets/Snow.png",  # snow day
+    '13n': "assets/Snow.png",  # sleet day
+    '50d': "assets/Haze.png",  # fog day
+    '50n': "assets/Haze.png",  # fog day
+    # '50d': "assests/Tornado.png",    # tornado
+    # 'hail': "assests/Hail.png"  # hail
 }
 
 
@@ -155,21 +163,21 @@ class Weather(Frame):
                 location2 = "%s, %s" % (location_obj['city'], location_obj['region_code'])
 
                 # get weather
-                weather_req_url = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (lat, lon, weather_api_token, weather_lang, weather_unit)
+                weather_req_url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (lat, lon, weather_api_token, weather_lang, weather_unit)
             else:
                 location2 = ""
                 # get weather
-                weather_req_url = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (weather_api_token, latitude, longitude, weather_lang, weather_unit)
+                weather_req_url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&lang=%s&units=%s" % (weather_api_token, latitude, longitude, weather_lang, weather_unit)
 
             r = requests.get(weather_req_url)
             weather_obj = json.loads(r.text)
 
             degree_sign= u'\N{DEGREE SIGN}'
             temperature2 = "%s%s" % (str(int(weather_obj['main']['temp'])), degree_sign)
-            currently2 = weather_obj['weather'][0]['main']
-            forecast2 = weather_obj['weather'][1]['main']
+            currently2 = weather_obj['current']['weather'][0]['description']
+            forecast2 = weather_obj['daily']['weather'][0]['main']
 
-            icon_id = weather_obj['weather'][0]['icon']
+            icon_id = weather_obj['current']['weather'][0]['icon']
             icon2 = None
 
             if icon_id in icon_lookup:
